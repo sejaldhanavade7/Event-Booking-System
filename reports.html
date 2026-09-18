@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="external.css">
+
+    <style>
+
+        .reports-page {
+            padding: 50px 20px;
+            min-height: 100vh;
+            background: var(--light);
+        }
+
+        .reports-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .reports-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .reports-header h1 {
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .reports-header p {
+            color: var(--muted);
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .report-card h3 {
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .report-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--mint);
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .summary-box {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .summary-title {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .report-table {
+            width: 100%;
+        }
+
+        .report-table th {
+            background: var(--navy);
+            color: white;
+            padding: 12px;
+        }
+
+        .report-table td {
+            padding: 12px;
+            color: var(--text);
+            border-bottom: 1px solid #eee;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: var(--mint);
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .download-btn {
+            background: var(--yellow);
+            color: var(--navy);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: var(--coral);
+            color: var(--navy);
+        }
+
+        .back-btn {
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .back-btn:hover {
+            color: var(--coral);
+        }
+
+        @media (max-width: 768px) {
+            .report-table {
+                font-size: 14px;
+            }
+
+            .report-table th,
+            .report-table td {
+                padding: 8px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="reports-page">
+
+        <div class="reports-container">
+
+            <!-- Back to Admin Dashboard -->
+            <a href="admin.html" class="back-btn">
+                <i class="bi bi-arrow-left"></i>
+                Back to Admin Dashboard
+            </a>
+
+            <!-- Header -->
+            <div class="reports-header">
+
+                <h1>Reports & Analytics</h1>
+
+                <p>
+                    View event registrations, bookings and event statistics.
+                </p>
+
+            </div>
+
+
+                <!-- Registration Summary -->
+                <div class="report-card">
+
+                    <div class="report-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0">Registration & User Summary</h3>
+                        <span class="badge bg-success" id="repActiveRateBadge">0% Active Users</span>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="summary-number" id="repTotalUsers">0</div>
+                                <div class="summary-title">
+                                    Total Registered Users
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="summary-number text-primary" id="repActiveUsers">0</div>
+                                <div class="summary-title">
+                                    Active Users (Booked &ge; 1)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="summary-number text-muted" id="repIdleUsers">0</div>
+                                <div class="summary-title">
+                                    Idle Users
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="summary-number" id="repTotalBookings">0</div>
+                                <div class="summary-title">
+                                    Total Bookings Made
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="summary-number" id="repTicketsSold">0</div>
+                                <div class="summary-title">
+                                    Total Tickets Purchased
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="summary-number text-success" id="repTotalRevenue">₹0</div>
+                                <div class="summary-title">
+                                    Total Revenue Contributed
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Event Report -->
+                <div class="report-card">
+
+                    <div class="report-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h3 class="mb-0">Event Report & Occupancy</h3>
+                            <small class="text-muted" id="repOverallOccupancy">Average Occupancy: 0.0%</small>
+                        </div>
+                        <span class="badge bg-primary fs-6" id="repTotalEventsBadge">0 Events</span>
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="report-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th>Category</th>
+                                    <th>Date & Venue</th>
+                                    <th>Capacity</th>
+                                    <th>Booked</th>
+                                    <th>Available</th>
+                                    <th>Occupancy</th>
+                                    <th>Revenue</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="repEventsTableBody">
+                                <tr>
+                                    <td colspan="9" class="text-center py-4 text-muted">
+                                        <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                        Loading event reports...
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- User Activity & Registered User Summary Table -->
+                <div class="report-card">
+
+                    <div class="report-icon">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+
+                    <h3 class="mb-3">Registered Users & Activity Summary</h3>
+
+                    <div class="table-responsive">
+
+                        <table class="report-table">
+
+                            <thead>
+                                <tr>
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Bookings</th>
+                                    <th>Tickets</th>
+                                    <th>Total Spent</th>
+                                    <th>Last Active</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="repUsersTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center py-4 text-muted">
+                                        <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                        Loading user activity summaries...
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Download Report -->
+                <div class="report-card text-center">
+
+                    <div class="report-icon mx-auto">
+                        <i class="bi bi-download"></i>
+                    </div>
+
+                    <h3>Export Event & Registration Reports</h3>
+
+                    <p>
+                        Download the comprehensive events, occupancy rates, and user registration data in CSV format.
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="download-btn" onclick="downloadCsvReport()">
+                            <i class="bi bi-file-earmark-spreadsheet me-1"></i>
+                            Download Events CSV
+                        </button>
+                        <a href="http://localhost:5000/api/reports/events?format=csv" target="_blank" class="btn btn-outline-dark py-2 px-3 rounded-3 fw-semibold">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>
+                            API Stream CSV
+                        </a>
+                    </div>
+
+                </div>
+
+
+                <!-- Footer -->
+                <footer class="text-center mt-5">
+                    © 2026 All Rights Reserved.
+                </footer>
+
+            </div>
+
+        </main>
+
+
+        <script>
+            let reportEventsData = [];
+            let reportSummaryData = {};
+
+            async function loadReportsData() {
+                try {
+                    const [eventsReportRes, regSummaryRes] = await Promise.all([
+                        fetch("http://localhost:5000/api/reports/events").catch(() => null),
+                        fetch("http://localhost:5000/api/reports/registration-summary").catch(() => null)
+                    ]);
+
+                    // 1. Process Event Reports API
+                    if (eventsReportRes && eventsReportRes.ok) {
+                        const eventApiData = await eventsReportRes.json();
+                        reportEventsData = eventApiData.events || [];
+                        const summary = eventApiData.summary || {};
+
+                        document.getElementById("repTotalEventsBadge").textContent = `${summary.totalEventsReported || reportEventsData.length} Events`;
+                        document.getElementById("repOverallOccupancy").textContent = `Average Occupancy: ${summary.overallOccupancyRate || "0.0%"}`;
+
+                        const tbody = document.getElementById("repEventsTableBody");
+                        if (reportEventsData.length > 0) {
+                            tbody.innerHTML = reportEventsData.map(e => `
+                                <tr>
+                                    <td><strong>${escapeHtml(e.title)}</strong></td>
+                                    <td><span class="badge bg-secondary">${escapeHtml(e.category || "General")}</span></td>
+                                    <td>
+                                        ${escapeHtml(e.date)}${e.time ? ' ' + escapeHtml(e.time) : ''}
+                                        <br><small class="text-muted">${escapeHtml(e.venue)}</small>
+                                    </td>
+                                    <td>${e.totalCapacity}</td>
+                                    <td><strong>${e.seatsBooked}</strong></td>
+                                    <td>${e.seatsAvailable}</td>
+                                    <td>
+                                        <span class="badge ${parseFloat(e.occupancyRate) > 50 ? 'bg-success' : 'bg-info'}">
+                                            ${e.occupancyRate}
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold text-success">
+                                        ${e.revenueGenerated > 0 ? "₹" + e.revenueGenerated.toLocaleString() : "Free"}
+                                    </td>
+                                    <td>
+                                        <span class="status ${e.status === 'Cancelled' ? 'bg-danger text-white' : ''}">
+                                            ${escapeHtml(e.status || 'Active')}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join("");
+                        } else {
+                            tbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-muted">No events listed.</td></tr>`;
+                        }
+                    }
+
+                    // 2. Process Registration Summary API
+                    if (regSummaryRes && regSummaryRes.ok) {
+                        const regData = await regSummaryRes.json();
+                        reportSummaryData = regData.summary || {};
+                        const users = regData.userSummaries || [];
+
+                        document.getElementById("repTotalUsers").textContent = reportSummaryData.totalRegisteredUsers || 0;
+                        document.getElementById("repActiveUsers").textContent = reportSummaryData.activeUsers || 0;
+                        document.getElementById("repIdleUsers").textContent = reportSummaryData.idleUsers || 0;
+                        document.getElementById("repTotalBookings").textContent = reportSummaryData.totalBookings || 0;
+                        document.getElementById("repTicketsSold").textContent = reportSummaryData.totalTicketsPurchased || 0;
+                        document.getElementById("repTotalRevenue").textContent = "₹" + (reportSummaryData.totalRevenueContributed || 0).toLocaleString();
+
+                        if (reportSummaryData.totalRegisteredUsers > 0) {
+                            const pct = ((reportSummaryData.activeUsers / reportSummaryData.totalRegisteredUsers) * 100).toFixed(0);
+                            document.getElementById("repActiveRateBadge").textContent = `${pct}% Active Users`;
+                        }
+
+                        // Render user summaries table
+                        const userTbody = document.getElementById("repUsersTableBody");
+                        if (users.length > 0) {
+                            userTbody.innerHTML = users.map(u => `
+                                <tr>
+                                    <td><strong>${escapeHtml(u.name)}</strong></td>
+                                    <td>${escapeHtml(u.email)}</td>
+                                    <td><span class="badge bg-secondary">${escapeHtml(u.role || 'user')}</span></td>
+                                    <td>${u.bookingsCount}</td>
+                                    <td>${u.totalTickets}</td>
+                                    <td class="text-success fw-bold">${u.totalSpent > 0 ? "₹" + u.totalSpent.toLocaleString() : "₹0"}</td>
+                                    <td>${u.lastActiveDate ? new Date(u.lastActiveDate).toLocaleDateString() : "-"}</td>
+                                    <td>
+                                        <span class="badge ${u.status === 'Active' ? 'bg-success' : 'bg-light text-dark border'}">
+                                            ${escapeHtml(u.status)}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join("");
+                        } else {
+                            userTbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">No registered users found.</td></tr>`;
+                        }
+                    }
+
+                } catch (e) {
+                    console.error("Error loading Module 5 reports data:", e);
+                }
+            }
+
+            function downloadCsvReport() {
+                if (reportEventsData.length === 0) {
+                    // Fallback to backend API stream
+                    window.location.href = "http://localhost:5000/api/reports/events?format=csv";
+                    return;
+                }
+
+                let csv = "=== EVENT REPORTS & OCCUPANCY ===\r\n";
+                csv += `Generated On: ${new Date().toLocaleString()}\r\n`;
+                csv += `Total Events: ${reportEventsData.length}\r\n`;
+                csv += `Total Bookings: ${reportSummaryData.totalBookings || 0}\r\n`;
+                csv += `Total Tickets Sold: ${reportSummaryData.totalTicketsPurchased || 0}\r\n`;
+                csv += `Total Revenue: INR ${reportSummaryData.totalRevenueContributed || 0}\r\n\r\n`;
+
+                csv += "Event ID,Title,Category,Date,Time,Venue,Total Capacity,Seats Booked,Seats Available,Occupancy Rate,Revenue (INR),Status\r\n";
+                reportEventsData.forEach(e => {
+                    csv += `"${e.eventId}","${(e.title || '').replace(/"/g, '""')}","${e.category || ''}","${e.date || ''}","${e.time || ''}","${(e.venue || '').replace(/"/g, '""')}",${e.totalCapacity},${e.seatsBooked},${e.seatsAvailable},"${e.occupancyRate}",${e.revenueGenerated},"${e.status}"\r\n`;
+                });
+
+                const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `event_management_report_${Date.now()}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            function escapeHtml(str) {
+                if (!str) return "";
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            document.addEventListener("DOMContentLoaded", loadReportsData);
+        </script>
+
+</body>
+
+</html>

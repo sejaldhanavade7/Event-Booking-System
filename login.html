@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="external.css">
+
+    <style>
+
+        .login-page {
+            min-height: 100vh;
+            background: var(--light);
+            padding: 130px 20px 70px;
+        }
+
+        .login-box {
+            max-width: 450px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(24, 31, 57, 0.1);
+        }
+
+        .login-box h1 {
+            color: var(--navy);
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .login-box > p {
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+
+        .form-control:focus {
+            border-color: var(--coral);
+            box-shadow: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            display: none;
+            color: #24735b;
+            background: var(--mint);
+            border: none;
+            border-radius: 7px;
+            text-align: center;
+            padding: 12px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .error-message {
+            display: none;
+            color: #842029;
+            background: #f8d7da;
+            border: 1px solid #f5c2c7;
+            border-radius: 7px;
+            text-align: center;
+            padding: 12px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: var(--navy);
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar navbar-expand-lg fixed-top">
+
+    <div class="container">
+
+        <a
+            class="nav-link"
+            href="home.html">
+
+            Home
+
+        </a>
+
+
+        <div class="ms-auto">
+
+            <a
+                href="register.html"
+                class="btn btn-outline-light btn-sm">
+
+                Create Account
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<section class="login-page">
+
+    <div class="container">
+
+        <div class="login-box">
+
+            <div class="eyebrow">
+
+                WELCOME BACK
+
+            </div>
+
+
+            <h1>
+
+                Login
+
+            </h1>
+
+
+            <p>
+
+                Login to manage your events and bookings.
+
+            </p>
+
+
+            <form onsubmit="loginUser(event)">
+
+
+                <!-- EMAIL -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="email"
+                        class="form-label">
+
+                        Email Address
+
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-control"
+                        placeholder="Enter your email"
+                        required>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="password"
+                        class="form-label">
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        placeholder="Enter your password"
+                        required>
+
+                </div>
+
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    id="loginBtn"
+                    class="btn btn-create login-btn">
+
+                    Login
+
+                </button>
+
+            </form>
+
+
+
+            <!-- SUCCESS MESSAGE -->
+
+            <div
+                id="successMessage"
+                class="success-message">
+
+                Login successful! Redirecting...
+
+            </div>
+
+
+
+            <!-- ERROR MESSAGE -->
+
+            <div
+                id="errorMessage"
+                class="error-message">
+
+            </div>
+
+
+
+            <!-- REGISTER LINK -->
+
+            <div class="register-link">
+
+                Don't have an account?
+
+                <a href="register.html">
+
+                    Create Account
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+async function loginUser(event) {
+
+    event.preventDefault();
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const successBox = document.getElementById("successMessage");
+    const errorBox = document.getElementById("errorMessage");
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    // Reset messages
+    successBox.style.display = "none";
+    errorBox.style.display = "none";
+    errorBox.innerText = "";
+
+    if (!email || !password) {
+
+        errorBox.innerText = "Please enter both email and password.";
+        errorBox.style.display = "block";
+        return;
+
+    }
+
+    try {
+
+        // Indicate loading
+        loginBtn.disabled = true;
+        loginBtn.innerText = "Logging in...";
+
+        const response = await fetch("http://localhost:5000/api/login", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+
+        });
+
+        const data = await response.json();
+
+        console.log("Server response:", data);
+
+        if (response.ok) {
+
+            successBox.innerText = "Login successful! Redirecting...";
+            successBox.style.display = "block";
+
+            /*
+             * Store logged-in user information
+             * so it can be used on dashboard pages.
+             */
+            localStorage.setItem(
+                "loggedInUser",
+                JSON.stringify(data.user)
+            );
+
+            // Redirect based on role
+            setTimeout(() => {
+                if (data.user && data.user.role === "admin") {
+                    window.location.href = "admin.html";
+                } else {
+                    window.location.href = "home.html";
+                }
+            }, 800);
+
+        } else {
+
+            errorBox.innerText = data.message || "Invalid email or password.";
+            errorBox.style.display = "block";
+
+        }
+
+    } catch (error) {
+
+        console.error("Login error:", error);
+
+        errorBox.innerText = "Unable to connect to the backend server. Make sure it is running on http://localhost:5000.";
+        errorBox.style.display = "block";
+
+    } finally {
+
+        loginBtn.disabled = false;
+        loginBtn.innerText = "Login";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

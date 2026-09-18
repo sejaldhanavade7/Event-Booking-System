@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Events</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="external.css">
+
+    <style>
+        .manage-page {
+            min-height: 100vh;
+            background: var(--light);
+            padding: 60px 20px;
+        }
+
+        .manage-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .page-heading h1 {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+        }
+
+        .back-btn {
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            color: var(--coral);
+        }
+
+        .events-box {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(24, 31, 57, 0.08);
+        }
+
+
+        .event-table td {
+            color: var(--text);
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .event-table tr:hover {
+            background: #f8f8f8;
+        }
+
+        .edit-btn {
+            background: var(--yellow);
+            color: var(--navy);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-weight: 600;
+        }
+
+        .edit-btn:hover {
+            background: var(--mint);
+            color: var(--navy);
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-weight: 600;
+            margin-left: 5px;
+            transition: 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #b02a37;
+            color: white;
+        }
+
+        .event-thumb {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+
+        .status {
+            background: var(--mint);
+            color: var(--navy);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: #e2e3e5;
+            color: #41464b;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        @media (max-width: 768px) {
+            .events-box {
+                overflow-x: auto;
+            }
+
+            .event-table {
+                min-width: 850px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="manage-page">
+
+        <div class="manage-container">
+
+            <a href="admin.html" class="back-btn">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+
+            <div class="page-heading">
+                <h1>Manage Events</h1>
+                <p>View and manage all your events</p>
+            </div>
+
+            <div class="events-box">
+
+                <table class="table event-table">
+
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th>Seats</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="eventTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                Loading events from database...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- =====================================================
+         EDIT EVENT MODAL
+    ===================================================== -->
+    <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="editEventForm" onsubmit="saveEditedEvent(event)">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Event Details
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" id="editEventId">
+
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label fw-bold">Event Name</label>
+                            <input type="text" id="editTitle" class="form-control" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editCategory" class="form-label fw-bold">Category</label>
+                                <select id="editCategory" class="form-select" required>
+                                    <option>Music</option>
+                                    <option>Food</option>
+                                    <option>Business</option>
+                                    <option>Sports</option>
+                                    <option>Art</option>
+                                    <option>Technology</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="editStatus" class="form-label fw-bold">Status</label>
+                                <select id="editStatus" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editDate" class="form-label fw-bold">Event Date</label>
+                                <input type="date" id="editDate" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="editTime" class="form-label fw-bold">Event Time</label>
+                                <input type="time" id="editTime" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editVenue" class="form-label fw-bold">Venue</label>
+                                <input type="text" id="editVenue" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="editSeats" class="form-label fw-bold">Available Seats</label>
+                                <input type="number" id="editSeats" class="form-control" min="1" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label fw-bold">Description</label>
+                            <textarea id="editDescription" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editBanner" class="form-label fw-bold">Change Banner Image (Optional)</label>
+                            <input type="file" id="editBanner" class="form-control" accept="image/*">
+                            <small class="text-muted">Leave empty to keep existing image</small>
+                        </div>
+
+                        <div id="modalError" class="alert alert-danger" style="display: none;"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+    let eventsList = [];
+    let editModalInstance = null;
+
+    // Load events from backend on startup
+    async function loadEvents() {
+        const tbody = document.getElementById("eventTableBody");
+        try {
+            const response = await fetch("http://localhost:5000/api/events");
+            const data = await response.json();
+
+            if (!response.ok) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">${data.message || "Failed to load events"}</td></tr>`;
+                return;
+            }
+
+            eventsList = data.events || [];
+
+            if (eventsList.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                            No events found in database.
+                            <br>
+                            <a href="add-event.html" class="btn btn-sm btn-create mt-2">+ Add First Event</a>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = eventsList.map(event => {
+                const imgTag = event.image 
+                    ? `<img src="${event.image.startsWith("http") ? event.image : "http://localhost:5000" + event.image}" class="event-thumb" alt="thumb" onerror="this.style.display='none'">` 
+                    : `<i class="bi bi-calendar-event me-2 text-muted fs-4"></i>`;
+
+                let statusBadgeClass = "status";
+                if (event.status === "Completed") statusBadgeClass = "status status-completed";
+                if (event.status === "Cancelled") statusBadgeClass = "status status-cancelled";
+
+                return `
+                    <tr id="row-${event._id}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                ${imgTag}
+                                <div>
+                                    <strong>${escapeHtml(event.title)}</strong>
+                                    <div class="text-muted small">${escapeHtml(event.location || event.venue)}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${escapeHtml(event.category)}</td>
+                        <td>
+                            <div>${escapeHtml(event.date)}</div>
+                            <small class="text-muted">${escapeHtml(event.time)}</small>
+                        </td>
+                        <td>${escapeHtml(event.venue)}</td>
+                        <td>${event.availableSeats}</td>
+                        <td>
+                            <span class="${statusBadgeClass}">${escapeHtml(event.status || "Active")}</span>
+                        </td>
+                        <td>
+                            <button class="edit-btn" onclick="openEditModal('${event._id}')">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="deleteEvent('${event._id}', '${escapeHtml(event.title)}')">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+        } catch (error) {
+            console.error("Load events error:", error);
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Unable to connect to backend server at http://localhost:5000.</td></tr>`;
+        }
+    }
+
+    // Open Edit Modal with prefilled data
+    function openEditModal(eventId) {
+        const event = eventsList.find(e => e._id === eventId);
+        if (!event) return;
+
+        document.getElementById("editEventId").value = event._id;
+        document.getElementById("editTitle").value = event.title || "";
+        document.getElementById("editCategory").value = event.category || "Music";
+        document.getElementById("editStatus").value = event.status || "Active";
+        document.getElementById("editDate").value = event.date || "";
+        document.getElementById("editTime").value = event.time || "";
+        document.getElementById("editVenue").value = event.venue || "";
+        document.getElementById("editSeats").value = event.availableSeats || 100;
+        document.getElementById("editDescription").value = event.description || "";
+        document.getElementById("editBanner").value = "";
+        document.getElementById("modalError").style.display = "none";
+
+        if (!editModalInstance) {
+            editModalInstance = new bootstrap.Modal(document.getElementById("editEventModal"));
+        }
+        editModalInstance.show();
+    }
+
+    // Save edited event via PUT /api/events/:id
+    async function saveEditedEvent(e) {
+        e.preventDefault();
+
+        const eventId = document.getElementById("editEventId").value;
+        const saveBtn = document.getElementById("saveChangesBtn");
+        const errorBox = document.getElementById("modalError");
+
+        errorBox.style.display = "none";
+
+        const formData = new FormData();
+        formData.append("title", document.getElementById("editTitle").value.trim());
+        formData.append("category", document.getElementById("editCategory").value);
+        formData.append("status", document.getElementById("editStatus").value);
+        formData.append("date", document.getElementById("editDate").value);
+        formData.append("time", document.getElementById("editTime").value);
+        formData.append("venue", document.getElementById("editVenue").value.trim());
+        formData.append("location", document.getElementById("editVenue").value.trim());
+        formData.append("availableSeats", document.getElementById("editSeats").value);
+        formData.append("description", document.getElementById("editDescription").value.trim());
+
+        const bannerFile = document.getElementById("editBanner").files[0];
+        if (bannerFile) {
+            formData.append("banner", bannerFile);
+        }
+
+        try {
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Saving...";
+
+            const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+                method: "PUT",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                editModalInstance.hide();
+                loadEvents(); // Reload refreshed table
+            } else {
+                errorBox.innerText = data.message || "Failed to update event";
+                errorBox.style.display = "block";
+            }
+        } catch (error) {
+            console.error("Update event error:", error);
+            errorBox.innerText = "Network error while saving changes.";
+            errorBox.style.display = "block";
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Save Changes";
+        }
+    }
+
+    // Delete event via DELETE /api/events/:id
+    async function deleteEvent(eventId, eventTitle) {
+        if (!confirm(`Are you sure you want to delete "${eventTitle}"?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Remove row from UI immediately
+                const row = document.getElementById(`row-${eventId}`);
+                if (row) row.remove();
+                loadEvents();
+            } else {
+                alert(data.message || "Failed to delete event.");
+            }
+        } catch (error) {
+            console.error("Delete event error:", error);
+            alert("Network error while deleting event.");
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", loadEvents);
+    </script>
+
+</body>
+
+</html>

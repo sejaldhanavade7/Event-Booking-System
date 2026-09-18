@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Tickets</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="external.css">
+
+    <style>
+        .booking-page {
+            min-height: 100vh;
+            padding: 70px 0;
+            background: var(--light);
+        }
+
+        .booking-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .booking-header h1 {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .booking-header p {
+            color: var(--muted);
+        }
+
+        .booking-box {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(24, 31, 57, 0.08);
+        }
+
+        .booking-box h3 {
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--mint);
+            box-shadow: 0 0 0 0.2rem rgba(173, 216, 206, 0.3);
+        }
+
+        .booking-btn:hover {
+            background: var(--coral);
+            color: var(--navy);
+        }
+
+        /* Confirmation Section */
+        .confirmation-section {
+            display: none;
+            text-align: center;
+        }
+
+        .confirmation-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 20px;
+            background: var(--mint);
+            color: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        .confirmation-section h2 {
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .confirmation-section > p {
+            color: var(--muted);
+            margin-bottom: 25px;
+        }
+
+        .booking-details {
+            text-align: left;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--navy);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .home-btn,
+        .events-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .home-btn {
+            background: var(--navy);
+            color: white;
+        }
+
+        .home-btn:hover {
+            background: var(--coral);
+            color: var(--navy);
+        }
+
+        .events-btn {
+            background: var(--yellow);
+            color: var(--navy);
+            margin-left: 8px;
+        }
+
+        .events-btn:hover {
+            background: var(--coral);
+        }
+
+        @media (max-width: 576px) {
+            .booking-box {
+                padding: 25px 20px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .detail-value {
+                text-align: left;
+            }
+
+            .home-btn,
+            .events-btn {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+
+        <div class="container">
+
+            <a class="navbar-brand" href="home.html">
+                Events
+            </a>
+
+            <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                    <ul class="navbar-nav ms-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="home.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="events.html">
+                                Events
+                            </a>
+                        </li>
+
+                        <li class="nav-item guest-nav-item">
+                            <a class="nav-link" href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li class="nav-item guest-nav-item">
+                            <a class="nav-link" href="register.html">
+                                Create Account
+                            </a>
+                        </li>
+
+                        <li class="nav-item user-nav-item" style="display: none;">
+                            <a class="nav-link" id="navDashboardLink" href="dashboard.html">
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item user-nav-item" style="display: none;">
+                            <a class="nav-link text-danger" href="javascript:void(0)" onclick="logoutUser()">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+
+        <!-- Booking Page -->
+        <section class="booking-page">
+
+            <div class="container">
+
+                <div class="booking-header">
+
+                    <p class="eyebrow">BOOK • CONFIRM • ENJOY</p>
+
+                    <h1>Book Your Tickets</h1>
+
+                    <p>
+                        Enter your details and select the number of seats.
+                    </p>
+
+                </div>
+
+
+                <div class="booking-box">
+
+                    <!-- Alert message -->
+                    <div id="bookingAlert" class="alert d-none mb-3" role="alert"></div>
+
+                    <!-- ================= BOOKING FORM ================= -->
+
+                    <div id="bookingFormSection">
+
+                        <h3>Booking Details</h3>
+
+                        <!-- Event Summary Preview Card -->
+                        <div id="eventInfoCard" class="card p-3 mb-3 border-0 bg-light rounded-3" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 fw-bold text-dark" id="infoTitle">Event Title</h6>
+                                <span class="badge bg-success" id="infoSeats">Seats</span>
+                            </div>
+                            <div class="small text-muted mb-1">
+                                <i class="bi bi-calendar-event me-1"></i><span id="infoDate"></span>
+                                <span class="mx-2">•</span>
+                                <i class="bi bi-geo-alt me-1"></i><span id="infoVenue"></span>
+                            </div>
+                            <div class="small fw-semibold text-primary" id="infoPrice">Price: Free</div>
+                        </div>
+
+                        <form id="bookingForm">
+
+                            <!-- Event -->
+                            <div class="mb-3">
+
+                                <label for="event" class="form-label">
+                                    Select Event
+                                </label>
+
+                                <select id="event" class="form-select" required>
+                                    <option value="">Choose an event</option>
+                                </select>
+
+                            </div>
+
+
+                            <!-- Name -->
+                            <div class="mb-3">
+
+                                <label for="name" class="form-label">
+                                    Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    class="form-control"
+                                    placeholder="Enter your full name"
+                                    required>
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="mb-3">
+
+                                <label for="email" class="form-label">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    class="form-control"
+                                    placeholder="Enter your email"
+                                    required>
+
+                            </div>
+
+
+                            <!-- Number of Seats -->
+                            <div class="mb-3">
+
+                                <label for="seats" class="form-label">
+                                    Number of Seats
+                                </label>
+
+                                <select id="seats" class="form-select" required>
+                                    <option value="1" selected>1 Seat</option>
+                                    <option value="2">2 Seats</option>
+                                    <option value="3">3 Seats</option>
+                                    <option value="4">4 Seats</option>
+                                    <option value="5">5 Seats</option>
+                                </select>
+
+                            </div>
+
+                            <!-- Pricing Calculation Display -->
+                            <div id="pricingRow" class="d-flex justify-content-between align-items-center p-3 mb-3 bg-light rounded-3">
+                                <span class="text-muted fw-semibold">Estimated Total:</span>
+                                <span class="fw-bold text-success fs-5" id="totalAmountText">Free</span>
+                            </div>
+
+
+                            <!-- Submit Button -->
+                            <button type="submit" id="submitBtn" class="booking-btn w-100 d-flex justify-content-center align-items-center">
+                                <span id="submitBtnText">Confirm Booking</span>
+                                <span id="submitSpinner" class="spinner-border spinner-border-sm d-none ms-2" role="status" aria-hidden="true"></span>
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- ================= CONFIRMATION ================= -->
+
+                    <div id="confirmationSection" class="confirmation-section">
+
+                        <div class="confirmation-icon">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+
+                        <h2>Booking Confirmed!</h2>
+
+                        <div class="alert alert-success text-start py-3 px-3 mb-3 border-0 rounded-3 shadow-sm" id="confirmedMsgAlert" style="background: rgba(173, 216, 206, 0.4); color: var(--navy);">
+                            <div class="fw-bold mb-1"><i class="bi bi-shield-check text-success me-1"></i> Official Confirmation:</div>
+                            <span id="confirmedMessageText" class="small">Your booking has been saved to the database.</span>
+                        </div>
+
+                        <div class="booking-details">
+
+                            <div class="detail-row">
+                                <span class="detail-label">Confirmation Code</span>
+                                <span class="detail-value text-primary font-monospace fw-bold" id="confirmedCode">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Booking ID</span>
+                                <span class="detail-value text-muted font-monospace small" id="confirmedBookingId">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Event</span>
+                                <span class="detail-value" id="confirmedEvent">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Date & Venue</span>
+                                <span class="detail-value" id="confirmedDateTime">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Name</span>
+                                <span class="detail-value" id="confirmedName">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Email</span>
+                                <span class="detail-value" id="confirmedEmail">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Seats</span>
+                                <span class="detail-value" id="confirmedSeats">-</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Total Amount</span>
+                                <span class="detail-value text-success fw-bold" id="confirmedTotal">-</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+                            <a href="dashboard.html" class="home-btn">
+                                <i class="bi bi-speedometer2 me-1"></i>View in Dashboard
+                            </a>
+                            <a href="events.html" class="events-btn">
+                                <i class="bi bi-compass me-1"></i>Explore More Events
+                            </a>
+                            <a href="home.html" class="btn btn-outline-secondary py-2 px-3 rounded-3 fw-semibold">
+                                Home
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <div class="container text-center">
+                © 2026 All Rights Reserved.
+            </div>
+
+        </footer>
+
+
+        <!-- JavaScript -->
+        <script>
+            let availableEvents = [];
+            let currentSelectedEvent = null;
+
+            function checkAuthState() {
+                const guestItems = document.querySelectorAll(".guest-nav-item");
+                const userItems = document.querySelectorAll(".user-nav-item");
+                const navDashboardLink = document.getElementById("navDashboardLink");
+
+                const userRaw = localStorage.getItem("loggedInUser");
+                if (userRaw) {
+                    try {
+                        const user = JSON.parse(userRaw);
+                        if (user && (user.name || user.email)) {
+                            guestItems.forEach(el => el.style.display = "none");
+                            userItems.forEach(el => el.style.display = "block");
+
+                            if (user.role === "admin" && navDashboardLink) {
+                                navDashboardLink.href = "admin.html";
+                                navDashboardLink.textContent = "Admin Panel";
+                            }
+
+                            // Autofill inputs
+                            const nameInput = document.getElementById("name");
+                            const emailInput = document.getElementById("email");
+                            if (nameInput && !nameInput.value && user.name) nameInput.value = user.name;
+                            if (emailInput && !emailInput.value && user.email) emailInput.value = user.email;
+
+                            return user;
+                        }
+                    } catch (e) {
+                        localStorage.removeItem("loggedInUser");
+                    }
+                }
+
+                guestItems.forEach(el => el.style.display = "block");
+                userItems.forEach(el => el.style.display = "none");
+                return null;
+            }
+
+            function logoutUser() {
+                if (confirm("Are you sure you want to log out?")) {
+                    localStorage.removeItem("loggedInUser");
+                    alert("You have been logged out successfully.");
+                    checkAuthState();
+                    window.location.href = "home.html";
+                }
+            }
+
+            function showAlert(msg, type = "danger") {
+                const alertEl = document.getElementById("bookingAlert");
+                alertEl.className = `alert alert-${type} mb-3`;
+                alertEl.textContent = msg;
+                alertEl.classList.remove("d-none");
+            }
+
+            function clearAlert() {
+                const alertEl = document.getElementById("bookingAlert");
+                alertEl.classList.add("d-none");
+            }
+
+            async function loadEventsDropdown() {
+                const selectEl = document.getElementById("event");
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryId = urlParams.get("id");
+                const queryTitle = urlParams.get("title");
+
+                try {
+                    const res = await fetch("http://localhost:5000/api/events");
+                    const data = await res.json();
+
+                    if (res.ok && data.events && data.events.length > 0) {
+                        availableEvents = data.events.filter(e => e.status !== "Cancelled");
+                    }
+                } catch (e) {
+                    console.log("Could not fetch remote events, using fallback default list.");
+                }
+
+                // If no events fetched from backend, provide defaults so user can still test
+                if (availableEvents.length === 0) {
+                    availableEvents = [
+                        { _id: "default-1", title: "Summer Music Festival", date: "20 June 2026", venue: "Mumbai", availableSeats: 500, price: 500 },
+                        { _id: "default-2", title: "Future Business Summit", date: "15 July 2026", venue: "Pune", availableSeats: 300, price: 1200 },
+                        { _id: "default-3", title: "Creative Art & Culture Night", date: "5 August 2026", venue: "Mumbai", availableSeats: 200, price: 0 }
+                    ];
+                }
+
+                selectEl.innerHTML = '<option value="">Choose an event</option>' +
+                    availableEvents.map(evt => {
+                        const priceText = evt.price > 0 ? ` (₹${evt.price})` : " (Free)";
+                        const seatText = evt.availableSeats > 0 ? ` - ${evt.availableSeats} seats left` : " (Sold Out)";
+                        return `<option value="${evt._id}">${escapeHtml(evt.title)}${priceText}${seatText}</option>`;
+                    }).join("");
+
+                // Check pre-selection from URL
+                let matchedIndex = -1;
+                if (queryId) {
+                    matchedIndex = availableEvents.findIndex(e => String(e._id) === String(queryId));
+                }
+                if (matchedIndex === -1 && queryTitle) {
+                    matchedIndex = availableEvents.findIndex(e => e.title.toLowerCase() === queryTitle.toLowerCase());
+                }
+
+                if (matchedIndex !== -1) {
+                    selectEl.value = availableEvents[matchedIndex]._id;
+                    onEventSelected(availableEvents[matchedIndex]);
+                }
+            }
+
+            function onEventSelected(eventObj) {
+                currentSelectedEvent = eventObj;
+                const infoCard = document.getElementById("eventInfoCard");
+                const infoTitle = document.getElementById("infoTitle");
+                const infoDate = document.getElementById("infoDate");
+                const infoVenue = document.getElementById("infoVenue");
+                const infoSeats = document.getElementById("infoSeats");
+                const infoPrice = document.getElementById("infoPrice");
+
+                if (!eventObj) {
+                    infoCard.style.display = "none";
+                    updatePricing();
+                    return;
+                }
+
+                infoTitle.textContent = eventObj.title;
+                infoDate.textContent = eventObj.date ? `${eventObj.date}${eventObj.time ? ' at ' + eventObj.time : ''}` : "TBA";
+                infoVenue.textContent = eventObj.venue || "Main Hall";
+                infoSeats.textContent = `${eventObj.availableSeats || 0} seats left`;
+                infoSeats.className = (eventObj.availableSeats && eventObj.availableSeats > 0) ? "badge bg-success" : "badge bg-danger";
+                infoPrice.textContent = eventObj.price > 0 ? `Ticket Price: ₹${eventObj.price} per seat` : "Ticket Price: Free Admission";
+
+                infoCard.style.display = "block";
+
+                // Update seats dropdown options (up to availableSeats or 10 max)
+                const seatsSelect = document.getElementById("seats");
+                const currentSeatVal = parseInt(seatsSelect.value, 10) || 1;
+                const maxSeats = Math.min(10, Math.max(1, eventObj.availableSeats || 1));
+
+                seatsSelect.innerHTML = "";
+                for (let i = 1; i <= maxSeats; i++) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.textContent = `${i} Seat${i > 1 ? 's' : ''}`;
+                    if (i === currentSeatVal) opt.selected = true;
+                    seatsSelect.appendChild(opt);
+                }
+
+                updatePricing();
+            }
+
+            function updatePricing() {
+                const totalDisplay = document.getElementById("totalAmountText");
+                const seats = parseInt(document.getElementById("seats").value, 10) || 1;
+
+                if (!currentSelectedEvent || !currentSelectedEvent.price || currentSelectedEvent.price === 0) {
+                    totalDisplay.textContent = "Free";
+                    totalDisplay.className = "fw-bold text-success fs-5";
+                    return;
+                }
+
+                const total = currentSelectedEvent.price * seats;
+                totalDisplay.textContent = `₹${total} (₹${currentSelectedEvent.price} × ${seats})`;
+                totalDisplay.className = "fw-bold text-success fs-5";
+            }
+
+            document.getElementById("event").addEventListener("change", function() {
+                const selectedId = this.value;
+                const found = availableEvents.find(e => String(e._id) === String(selectedId));
+                onEventSelected(found || null);
+            });
+
+            document.getElementById("seats").addEventListener("change", updatePricing);
+
+            document.getElementById("bookingForm").addEventListener("submit", async function(event) {
+                event.preventDefault();
+                clearAlert();
+
+                const selectEl = document.getElementById("event");
+                const selectedId = selectEl.value;
+                const selectedObj = availableEvents.find(e => String(e._id) === String(selectedId));
+
+                if (!selectedObj) {
+                    showAlert("Please select a valid event.");
+                    return;
+                }
+
+                const name = document.getElementById("name").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const seats = parseInt(document.getElementById("seats").value, 10) || 1;
+
+                if (!name || !email) {
+                    showAlert("Please enter your name and email.");
+                    return;
+                }
+
+                const loggedUser = checkAuthState();
+                const submitBtn = document.getElementById("submitBtn");
+                const submitSpinner = document.getElementById("submitSpinner");
+                const submitBtnText = document.getElementById("submitBtnText");
+
+                // Disable button and show spinner
+                submitBtn.disabled = true;
+                submitSpinner.classList.remove("d-none");
+                submitBtnText.textContent = "Processing...";
+
+                try {
+                    const payload = {
+                        eventId: selectedObj._id.startsWith("default-") ? undefined : selectedObj._id,
+                        eventTitle: selectedObj.title,
+                        eventDate: selectedObj.date,
+                        eventVenue: selectedObj.venue,
+                        userName: name,
+                        userEmail: email,
+                        seats: seats,
+                        userId: loggedUser ? (loggedUser.id || loggedUser._id) : undefined
+                    };
+
+                    const response = await fetch("http://localhost:5000/api/bookings", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        showAlert(data.message || "Failed to complete booking. Please try again.");
+                        submitBtn.disabled = false;
+                        submitSpinner.classList.add("d-none");
+                        submitBtnText.textContent = "Confirm Booking";
+                        return;
+                    }
+
+                    // Booking created successfully!
+                    const booking = data.booking || {};
+                    const confCode = data.confirmationCode || booking.confirmationCode || ("CONF-" + Math.floor(100000 + Math.random() * 900000));
+                    const confMsg = data.confirmationMessage || booking.confirmationMessage || `Your booking for ${booking.eventTitle || selectedObj.title} is confirmed!`;
+
+                    document.getElementById("confirmedCode").textContent = confCode;
+                    document.getElementById("confirmedMessageText").textContent = confMsg;
+                    document.getElementById("confirmedBookingId").textContent = booking._id || confCode;
+                    document.getElementById("confirmedEvent").textContent = booking.eventTitle || selectedObj.title;
+                    document.getElementById("confirmedDateTime").textContent = `${booking.eventDate || selectedObj.date} • ${booking.eventVenue || selectedObj.venue}`;
+                    document.getElementById("confirmedName").textContent = booking.userName || name;
+                    document.getElementById("confirmedEmail").textContent = booking.userEmail || email;
+                    document.getElementById("confirmedSeats").textContent = `${booking.seats || seats} Seat(s)`;
+                    document.getElementById("confirmedTotal").textContent = (booking.totalAmount > 0) ? `₹${booking.totalAmount}` : "Free";
+
+                    // Hide booking form, show confirmation
+                    document.getElementById("bookingFormSection").style.display = "none";
+                    document.getElementById("confirmationSection").style.display = "block";
+
+                } catch (err) {
+                    console.error("Booking error:", err);
+                    showAlert("Unable to connect to backend server. Make sure server is running.");
+                    submitBtn.disabled = false;
+                    submitSpinner.classList.add("d-none");
+                    submitBtnText.textContent = "Confirm Booking";
+                }
+            });
+
+            function escapeHtml(str) {
+                if (!str) return "";
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                checkAuthState();
+                loadEventsDropdown();
+            });
+        </script>
+
+
+    <!-- Bootstrap JS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+</body>
+
+</html>
