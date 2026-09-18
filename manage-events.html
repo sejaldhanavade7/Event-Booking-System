@@ -298,7 +298,7 @@
     async function loadEvents() {
         const tbody = document.getElementById("eventTableBody");
         try {
-            const response = await fetch("http://localhost:5000/api/events");
+            const response = await fetch("https://event-booking-system-7iw2.onrender.com/api/events");
             const data = await response.json();
 
             if (!response.ok) {
@@ -324,7 +324,7 @@
 
             tbody.innerHTML = eventsList.map(event => {
                 const imgTag = event.image 
-                    ? `<img src="${event.image.startsWith("http") ? event.image : "http://localhost:5000" + event.image}" class="event-thumb" alt="thumb" onerror="this.style.display='none'">` 
+                    ? `<img src="${event.image.startsWith("http") ? event.image : "https://event-booking-system-7iw2.onrender.com" + event.image}" class="event-thumb" alt="thumb" onerror="this.style.display='none'">` 
                     : `<i class="bi bi-calendar-event me-2 text-muted fs-4"></i>`;
 
                 let statusBadgeClass = "status";
@@ -366,7 +366,7 @@
 
         } catch (error) {
             console.error("Load events error:", error);
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Unable to connect to backend server at http://localhost:5000.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Unable to connect to backend server at https://event-booking-system-7iw2.onrender.com.</td></tr>`;
         }
     }
 
@@ -423,7 +423,7 @@
             saveBtn.disabled = true;
             saveBtn.innerText = "Saving...";
 
-            const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+            const response = await fetch(`https://event-booking-system-7iw2.onrender.com/api/events/${eventId}`, {
                 method: "PUT",
                 body: formData
             });
@@ -454,7 +454,7 @@
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+            const response = await fetch(`https://event-booking-system-7iw2.onrender.com/api/events/${eventId}`, {
                 method: "DELETE"
             });
 

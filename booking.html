@@ -549,7 +549,7 @@
                 const queryTitle = urlParams.get("title");
 
                 try {
-                    const res = await fetch("http://localhost:5000/api/events");
+                    const res = await fetch("https://event-booking-system-7iw2.onrender.com/api/events");
                     const data = await res.json();
 
                     if (res.ok && data.events && data.events.length > 0) {
@@ -698,7 +698,7 @@
                         userId: loggedUser ? (loggedUser.id || loggedUser._id) : undefined
                     };
 
-                    const response = await fetch("http://localhost:5000/api/bookings", {
+                    const response = await fetch("https://event-booking-system-7iw2.onrender.com/api/bookings", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(payload)

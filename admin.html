@@ -430,7 +430,7 @@
 
         // 1. Fetch Stats from Module 4/5 API
         try {
-            const statsRes = await fetch("http://localhost:5000/api/admin/stats");
+            const statsRes = await fetch("https://event-booking-system-7iw2.onrender.com/api/admin/stats");
             const statsData = await statsRes.json();
             if (statsRes.ok) {
                 document.getElementById("statTotalEvents").innerText = statsData.totalEvents || 0;
@@ -445,7 +445,7 @@
         // 2. Fetch Recent Events
         const recentBox = document.getElementById("recentEventsList");
         try {
-            const eventsRes = await fetch("http://localhost:5000/api/events");
+            const eventsRes = await fetch("https://event-booking-system-7iw2.onrender.com/api/events");
             const eventsData = await eventsRes.json();
 
             if (eventsRes.ok && eventsData.events && eventsData.events.length > 0) {

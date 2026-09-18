@@ -367,7 +367,7 @@
                             <i class="bi bi-file-earmark-spreadsheet me-1"></i>
                             Download Events CSV
                         </button>
-                        <a href="http://localhost:5000/api/reports/events?format=csv" target="_blank" class="btn btn-outline-dark py-2 px-3 rounded-3 fw-semibold">
+                        <a href="https://event-booking-system-7iw2.onrender.com/api/reports/events?format=csv" target="_blank" class="btn btn-outline-dark py-2 px-3 rounded-3 fw-semibold">
                             <i class="bi bi-box-arrow-up-right me-1"></i>
                             API Stream CSV
                         </a>
@@ -393,8 +393,8 @@
             async function loadReportsData() {
                 try {
                     const [eventsReportRes, regSummaryRes] = await Promise.all([
-                        fetch("http://localhost:5000/api/reports/events").catch(() => null),
-                        fetch("http://localhost:5000/api/reports/registration-summary").catch(() => null)
+                        fetch("https://event-booking-system-7iw2.onrender.com/api/reports/events").catch(() => null),
+                        fetch("https://event-booking-system-7iw2.onrender.com/api/reports/registration-summary").catch(() => null)
                     ]);
 
                     // 1. Process Event Reports API
@@ -489,7 +489,7 @@
             function downloadCsvReport() {
                 if (reportEventsData.length === 0) {
                     // Fallback to backend API stream
-                    window.location.href = "http://localhost:5000/api/reports/events?format=csv";
+                    window.location.href = "https://event-booking-system-7iw2.onrender.com/api/reports/events?format=csv";
                     return;
                 }
 
